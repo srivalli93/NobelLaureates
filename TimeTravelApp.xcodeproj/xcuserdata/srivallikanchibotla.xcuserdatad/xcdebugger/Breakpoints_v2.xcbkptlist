@@ -32,9 +32,9 @@
             timestampString = "590361295.554144"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
-            landmarkName = "getClosestLocations(_:)"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "submitAction(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -49,8 +49,8 @@
             timestampString = "590361295.554219"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
             landmarkName = "latLongTextFieldValidation()"
             landmarkType = "7">
          </BreakpointContent>
@@ -66,8 +66,8 @@
             timestampString = "590361295.5542721"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "174"
-            endingLineNumber = "174"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
             landmarkName = "getTwentyClosestLocation(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -83,8 +83,8 @@
             timestampString = "590361295.554322"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "192"
-            endingLineNumber = "192"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "getTwentyClosestLocation(_:_:)"
             landmarkType = "7">
          </BreakpointContent>

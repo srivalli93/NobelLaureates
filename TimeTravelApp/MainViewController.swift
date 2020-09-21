@@ -13,8 +13,14 @@ import CoreLocation
 class MainViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
 
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var vstackView: UIStackView!
-    
+    @IBOutlet weak var latitudeLabel: UILabel!
+    @IBOutlet weak var longitudeLabel: UILabel!
+    @IBOutlet weak var yearLabel: UILabel!
+    @IBOutlet weak var latitudeTextField: UITextField!
+    @IBOutlet weak var longitudeTextField: UITextField!
+    @IBOutlet weak var yearTextField: UITextField!
+    @IBOutlet weak var mainScrollView: UIScrollView!
+    @IBOutlet weak var submitButton: UIButton!
     
     let locationManager = CLLocationManager()
     let regionRadius: CLLocationDistance = 1000
@@ -23,24 +29,24 @@ class MainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     var yearPickerView = UIPickerView()
     var yearPickerData: [Int] = []
     
-    var latitudeTextField = UITextField()
-    var longitudeTextField = UITextField()
-    var yearPickerField = UITextField()
-    
     public static var nearestTwentyEvents: [NobelPrizeLaureates] = []
     public var nobelPrizeLaureates: [NobelPrizeLaureates] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //scroll view setup
+//        mainScrollView.delegate = self
+        mainScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(endEditing)))
+        mainScrollView.contentSize = CGSize(width: self.view.bounds.width, height: self.view.bounds.height)
+        
         //to request location permissions
         self.locationManager.requestWhenInUseAuthorization()
-        
-        setInputFields()
         
         yearPickerView.backgroundColor = .white
         yearPickerView.delegate = self
         yearPickerView.dataSource = self
-        yearPickerField.inputView = yearPickerView
+        yearTextField.inputView = yearPickerView
         
         mapView.delegate = self
         
@@ -66,35 +72,8 @@ class MainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    func setInputFields () {
-        let latitudeLabel = UILabel(frame: CGRect(x: vstackView.frame.minX, y: vstackView.frame.minY, width: 20, height: 10))
-        latitudeLabel.text = "Latitude :"
-        latitudeLabel.textAlignment = .center
-        
-        let longitudeLabel = UILabel(frame: CGRect(x: vstackView.frame.minX, y: vstackView.frame.minY, width: 20, height: 10))
-        longitudeLabel.text = "Logitude : "
-        longitudeLabel.textAlignment = .center
-        
-        let yearLabel = UILabel(frame: CGRect(x: vstackView.frame.minX, y: vstackView.frame.minY, width: 20, height: 10))
-        yearLabel.text = "Year : "
-        yearLabel.textAlignment = .center
-        
-        latitudeTextField = UITextField(frame: CGRect(x: vstackView.frame.minX , y: vstackView.frame.minY + 25, width: 20, height: 10))
-        latitudeTextField.keyboardType = .numberPad
-        
-        longitudeTextField = UITextField(frame: CGRect(x: vstackView.frame.minX , y: vstackView.frame.minY + 25, width: 20, height: 10))
-        longitudeTextField.keyboardType = .numberPad
-        
-        yearPickerField = UITextField(frame: CGRect(x: vstackView.frame.minX , y: vstackView.frame.minY + 25, width: 20, height: 10))
-        yearPickerField.inputView = yearPickerView
-
-        vstackView.addSubview(latitudeLabel)
-        vstackView.addSubview(latitudeTextField)
-        vstackView.addSubview(longitudeLabel)
-        vstackView.addSubview(longitudeTextField)
-        vstackView.addSubview(yearLabel)
-        vstackView.addSubview(yearPickerField)
-        
+    @objc func endEditing() {
+        self.view.endEditing(true)
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -114,7 +93,7 @@ class MainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first
         if touch?.view == self.view {
-            yearPickerField.endEditing(true)
+            yearTextField.endEditing(true)
         }
     }
     
@@ -127,12 +106,11 @@ class MainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         }
         return coordinates
     }
-    
-    @IBAction func getClosestLocations(_ sender: Any) {
+    @IBAction func submitAction(_ sender: UIButton) {
         
         //year
         var currentYear = Calendar.current.component(.year, from: Date())
-        if let yearText = yearPickerField.text {      //when user did not enter year in the fields, fall back is to use current year
+        if let yearText = yearTextField.text {      //when user did not enter year in the fields, fall back is to use current year
             currentYear = Int(yearText) ?? currentYear
         }
         //location
@@ -154,6 +132,7 @@ class MainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         
         MainViewController.nearestTwentyEvents = getTwentyClosestLocation(currentLocation , currentYear)
         
+        performSegue(withIdentifier: "resultsSegue", sender: self)
     }
     
     // To zoom in and center map on the current location
@@ -210,7 +189,8 @@ class MainViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        yearPickerField.text = String(yearPickerData[row])
+        yearTextField.text = String(yearPickerData[row])
+        self.view.endEditing(true)
     }
     
     deinit {
